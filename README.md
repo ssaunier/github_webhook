@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/ssaunier/github_webhook.png)](https://travis-ci.org/ssaunier/github_webhook)
+[![Gem Version](https://badge.fury.io/rb/github_webhook.png)](http://badge.fury.io/rb/github_webhook)
+
+
 # GithubWebhook
 
 This gem will help you to quickly setup a route in your Rails application which listens
