@@ -34,6 +34,8 @@ class GithubWebhooksController < ActionController::Base
   end
 end
 
+Add as many instance methods as events you want to handle in
+your controller. You can read the [full list of events](https://developer.github.com/v3/activity/events/types/) GitHub can notify you about.
 ```
 
 ## Adding the Webhook to your git repository:
