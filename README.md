@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/ssaunier/github_webhook.png)](https://travis-ci.org/ssaunier/github_webhook)
+[![Build Status](https://travis-ci.org/ssaunier/github_webhook.svg?branch=master)](https://travis-ci.org/ssaunier/github_webhook)
 [![Gem Version](https://badge.fury.io/rb/github_webhook.png)](http://badge.fury.io/rb/github_webhook)
 
 
