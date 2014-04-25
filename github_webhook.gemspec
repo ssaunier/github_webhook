@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = GithubWebhook::VERSION
   spec.authors       = ["Sebastien Saunier"]
   spec.email         = ["seb@saunier.me"]
-  spec.summary       = %q{Rails engine handling Github Webhook}
+  spec.summary       = %q{Process GitHub Webhooks in your Rails app (Controller mixin)}
   spec.description   = spec.summary
   spec.homepage      = "https://github.com/ssaunier/github_webhook"
   spec.license       = "MIT"
