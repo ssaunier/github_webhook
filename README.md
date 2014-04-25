@@ -19,7 +19,7 @@ First, configure a route to receive the github webhook POST requests.
 
 ```ruby
 # config/routes.rb
-resource :github_webhooks, only: :create
+resource :github_webhooks, only: :create, defaults: { formats: :json }
 ```
 
 Then create a new controller:
@@ -40,21 +40,27 @@ your controller. You can read the [full list of events](https://developer.github
 
 ## Adding the Webhook to your git repository:
 
-Go to the following URL:
+First, install [octokit](https://github.com/octokit/octokit.rb), then run a rails console.
 
+```bash
+gem install octokit
+rails console
 ```
-https://github.com/:username/:repo/settings/hooks/new
+
+In the rails console, add the WebHook to GitHub:
+
+```ruby
+require "octokit"
+client = Octokit::Client.new(:login => 'ssaunier', :password => 's3cr3t!!!')
+
+repo = "ssaunier/github_webhook"
+callback_url = "yourdomain.com/github_webhooks"
+webhook_secret = "a_gr34t_s3cr3t"  # Must be set after that in ENV['GITHUB_WEBHOOK_SECRET']
+
+# Create the WebHook
+client.subscribe "https://github.com/#{repo}/events/push.json", callback_url, secret
 ```
 
-You will need to fill the following form:
-
-![GitHub WebHook](github_webhook.png)
-
-- Payload URL: `yourdomain.com/github_webhooks`
-- Payload Version: application/vnd.github.v3+**json**
-- Events: select which event you want GitHub to notify you
-- Active: let it ticked if you want the webhook to work upon creation.
-
-## Testing the GitHub webhook locally
-
-You can use [UltraHook](http://www.ultrahook.com/)
+The secret is set at the webhook creation. Store it in an environment variable,
+`GITHUB_WEBHOOK_SECRET` as per the example. It is important to have such a secret,
+as it will guarantee that your process legit webhooks requests, thus only from GitHub.
