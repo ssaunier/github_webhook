@@ -7,7 +7,9 @@ to a [GitHub webhook](https://developer.github.com/webhooks/)
 
 Add this line to your application's Gemfile:
 
-    gem 'github_webhook'
+```ruby
+gem 'github_webhook'
+```
 
 And then execute:
 
@@ -33,18 +35,18 @@ class GithubWebhooksController < ActionController::Base
     # TODO: handle push webhook
   end
 end
+```
 
 Add as many instance methods as events you want to handle in
 your controller. You can read the [full list of events](https://developer.github.com/v3/activity/events/types/) GitHub can notify you about.
-```
 
 ## Adding the Webhook to your git repository:
 
 First, install [octokit](https://github.com/octokit/octokit.rb), then run a rails console.
 
 ```bash
-gem install octokit
-rails console
+$ gem install octokit
+$ rails console
 ```
 
 In the rails console, add the WebHook to GitHub:
