@@ -9,8 +9,16 @@ module GithubWebhook::Processor
   class UnspecifiedWebhookSecretError < StandardError; end
 
   def create
-    self.send json_body[:action], json_body
-    head(:ok)
+    if self.respond_to? event
+      self.send event, json_body
+      head(:ok)
+    else
+      raise NoMethodError.new("GithubWebhooksController##{event} not implemented")
+    end
+  end
+
+  def ping(payload)
+    puts "[GithubWebhook::Processor] Hook ping received, hook_id: #{payload[:hook_id]}, #{payload[:zen]}"
   end
 
   private
@@ -39,5 +47,9 @@ module GithubWebhook::Processor
 
   def signature_header
     @signature_header ||= request.headers['X-Hub-Signature']
+  end
+
+  def event
+    @event ||= request.headers['X-GitHub-Event'].to_sym
   end
 end
