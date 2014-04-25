@@ -66,3 +66,9 @@ client.subscribe "https://github.com/#{repo}/events/push.json", callback_url, se
 The secret is set at the webhook creation. Store it in an environment variable,
 `GITHUB_WEBHOOK_SECRET` as per the example. It is important to have such a secret,
 as it will guarantee that your process legit webhooks requests, thus only from GitHub.
+
+You can have an overview of your webhooks at the following URL:
+
+```
+https://github.com/:username/:repo/settings/hooks
+```
