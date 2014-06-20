@@ -26,9 +26,10 @@ module GithubWebhook::Processor
   HMAC_DIGEST = OpenSSL::Digest.new('sha1')
 
   def authenticate_github_request!
-    raise UnspecifiedWebhookSecretError.new unless defined?(self.class::WEBHOOK_SECRET)
+    raise UnspecifiedWebhookSecretError.new unless respond_to?(:webhook_secret)
+    secret = webhook_secret(json_body)
 
-    expected_signature = "sha1=#{OpenSSL::HMAC.hexdigest(HMAC_DIGEST, self.class::WEBHOOK_SECRET, request_body)}"
+    expected_signature = "sha1=#{OpenSSL::HMAC.hexdigest(HMAC_DIGEST, secret, request_body)}"
     if signature_header != expected_signature
       raise SignatureError.new "Actual: #{signature_header}, Expected: #{expected_signature}"
     end

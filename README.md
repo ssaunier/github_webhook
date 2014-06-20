@@ -34,10 +34,15 @@ Then create a new controller:
 # app/controllers/github_webhooks_controller.rb
 class GithubWebhooksController < ActionController::Base
   include GithubWebhook::Processor
-  WEBHOOK_SECRET = ENV['GITHUB_WEBHOOK_SECRET']
 
   def push(payload)
     # TODO: handle push webhook
+  end
+
+  private
+
+  def webhook_secret(payload)
+    ENV['GITHUB_WEBHOOK_SECRET']
   end
 end
 ```

@@ -29,7 +29,9 @@ module GithubWebhook
     end
 
     class Controller < ControllerWithoutSecret
-      WEBHOOK_SECRET = "secret"
+      def webhook_secret(payload)
+        "secret"
+      end
     end
 
     let(:controller) do
