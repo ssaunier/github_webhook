@@ -35,8 +35,14 @@ Then create a new controller:
 class GithubWebhooksController < ActionController::Base
   include GithubWebhook::Processor
 
-  def push(payload)
+  # Handle push event
+  def github_push(payload)
     # TODO: handle push webhook
+  end
+
+  # Handle create event
+  def github_create(payload)
+    # TODO: handle create webhook
   end
 
   def webhook_secret(payload)
@@ -46,7 +52,11 @@ end
 ```
 
 Add as many instance methods as events you want to handle in
-your controller. You can read the [full list of events](https://developer.github.com/v3/activity/events/types/) GitHub can notify you about.
+your controller.
+
+All events are prefixed with `github_`. So, a `push` event can be handled by `github_push(payload)`, or a `create` event can be handled by `github_create(payload)`, etc.
+
+You can read the [full list of events](https://developer.github.com/v3/activity/events/types/) GitHub can notify you about.
 
 ## Adding the Webhook to your git repository:
 

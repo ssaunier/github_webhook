@@ -23,7 +23,7 @@ module GithubWebhook
 
       include GithubWebhook::Processor
 
-      def push(payload)
+      def github_push(payload)
         @pushed = payload[:foo]
       end
     end

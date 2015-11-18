@@ -51,6 +51,6 @@ module GithubWebhook::Processor
   end
 
   def event
-    @event ||= request.headers['X-GitHub-Event'].to_sym
+    @event ||= "github_#{request.headers['X-GitHub-Event']}".to_sym
   end
 end
