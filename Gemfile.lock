@@ -15,7 +15,7 @@ GEM
       tzinfo (~> 1.1)
     diff-lcs (1.2.5)
     i18n (0.6.9)
-    json (1.8.1)
+    json (1.8.3)
     minitest (5.3.5)
     rake (10.3.1)
     rspec (2.14.1)
@@ -38,3 +38,6 @@ DEPENDENCIES
   github_webhook!
   rake (~> 10.1)
   rspec (~> 2.14)
+
+BUNDLED WITH
+   1.11.2
