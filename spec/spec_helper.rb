@@ -1,5 +1,8 @@
 ENV['RAILS_ENV'] ||= 'test'
 
+require 'simplecov'
+SimpleCov.start
+
 require "github_webhook"
 
 # Load support files
