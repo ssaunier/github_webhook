@@ -2,18 +2,22 @@ module GithubWebhook::Processor
   extend ActiveSupport::Concern
 
   included do
-    before_filter :authenticate_github_request!, :only => :create
+    before_filter :authenticate_github_request!, only: :create
+    before_filter :check_github_event!, only: :create
   end
 
   class SignatureError < StandardError; end
   class UnspecifiedWebhookSecretError < StandardError; end
+  class UnsupportedGithubEventError < StandardError; end
+
+  GITHUB_EVENTS_WHITELIST = %w(commit_comment create delete deployment deployment_status download follow fork fork_apply gist gollum issue_comment issues member membership page_build public pull_request pull_request_review_comment push release repository status team_add watch)
 
   def create
-    if self.respond_to? event
-      self.send event, json_body
+    if self.respond_to? event_method
+      self.send event_method, json_body
       head(:ok)
     else
-      raise NoMethodError.new("GithubWebhooksController##{event} not implemented")
+      raise NoMethodError.new("GithubWebhooksController##{event_method} not implemented")
     end
   end
 
@@ -35,6 +39,12 @@ module GithubWebhook::Processor
     end
   end
 
+  def check_github_event!
+    unless GITHUB_EVENTS_WHITELIST.include?(request.headers['X-GitHub-Event'])
+      raise UnsupportedGithubEventError.new("#{request.headers['X-GitHub-Event']} is not a whiltelisted GitHub event. See https://developer.github.com/v3/activity/events/types/")
+    end
+  end
+
   def request_body
     @request_body ||= (
       request.body.rewind
@@ -50,7 +60,7 @@ module GithubWebhook::Processor
     @signature_header ||= request.headers['X-Hub-Signature']
   end
 
-  def event
-    @event ||= "github_#{request.headers['X-GitHub-Event']}".to_sym
+  def event_method
+    @event_method ||= "github_#{request.headers['X-GitHub-Event']}".to_sym
   end
 end

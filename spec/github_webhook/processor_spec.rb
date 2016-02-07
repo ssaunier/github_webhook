@@ -46,7 +46,7 @@ module GithubWebhook
 
     describe "#create" do
       it "raises an error when secret is not defined" do
-        expect { controller_without_secret.send :authenticate_github_request! }.to raise_error
+        expect { controller_without_secret.send :authenticate_github_request! }.to raise_error(Processor::UnspecifiedWebhookSecretError)
       end
 
       it "calls the #push method in controller" do
@@ -55,19 +55,24 @@ module GithubWebhook
         controller.request.headers['X-GitHub-Event'] = 'push'
         controller.send :authenticate_github_request!  # Manually as we don't have the before_filter logic in our Mock object
         controller.create
-        controller.pushed.should eq "bar"
+        expect(controller.pushed).to eq "bar"
       end
 
       it "raises an error when signature does not match" do
         controller.request.body = StringIO.new({ :foo => "bar" }.to_json.to_s)
         controller.request.headers['X-Hub-Signature'] = "sha1=FOOBAR"
         controller.request.headers['X-GitHub-Event'] = 'push'
-        expect { controller_without_secret.send :authenticate_github_request! }.to raise_error
+        expect { controller.send :authenticate_github_request! }.to raise_error(Processor::SignatureError)
       end
 
       it "raises an error when the github event method is not implemented" do
-        controller.request.headers['X-GitHub-Event'] = 'unimplemented_event'
-        expect { controller_without_secret.create }.to raise_error
+        controller.request.headers['X-GitHub-Event'] = 'deployment'
+        expect { controller.create }.to raise_error(NoMethodError)
+      end
+
+      it "raises an error when the github event is not in the whitelist" do
+        controller.request.headers['X-GitHub-Event'] = 'fake_event'
+        expect { controller.send :check_github_event! }.to raise_error(Processor::UnsupportedGithubEventError)
       end
     end
   end
