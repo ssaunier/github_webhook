@@ -13,6 +13,8 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
+    codeclimate-test-reporter (0.4.8)
+      simplecov (>= 0.7.1, < 1.0.0)
     diff-lcs (1.2.5)
     docile (1.1.5)
     i18n (0.6.9)
@@ -41,10 +43,10 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 1.5)
+  codeclimate-test-reporter
   github_webhook!
   rake (~> 10.1)
   rspec (~> 2.14)
-  simplecov
 
 BUNDLED WITH
    1.11.2
