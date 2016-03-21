@@ -64,7 +64,7 @@ module GithubWebhook::Processor
   )
 
   def create
-    if self.respond_to? event_method
+    if self.respond_to?(event_method, true)
       self.send event_method, json_body
       head(:ok)
     else
@@ -81,7 +81,7 @@ module GithubWebhook::Processor
   HMAC_DIGEST = OpenSSL::Digest.new('sha1')
 
   def authenticate_github_request!
-    raise UnspecifiedWebhookSecretError.new unless respond_to?(:webhook_secret)
+    raise UnspecifiedWebhookSecretError.new unless respond_to?(:webhook_secret, true)
     secret = webhook_secret(json_body)
 
     expected_signature = "sha1=#{OpenSSL::HMAC.hexdigest(HMAC_DIGEST, secret, request_body)}"
