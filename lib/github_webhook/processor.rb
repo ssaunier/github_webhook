@@ -2,8 +2,8 @@ module GithubWebhook::Processor
   extend ActiveSupport::Concern
 
   included do
-    before_filter :authenticate_github_request!, only: :create
-    before_filter :check_github_event!, only: :create
+    before_action :authenticate_github_request!, only: :create
+    before_action :check_github_event!, only: :create
   end
 
   class SignatureError < StandardError; end

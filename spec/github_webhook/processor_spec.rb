@@ -16,8 +16,8 @@ module GithubWebhook
       ### Helpers to mock ActionController::Base behavior
       attr_accessor :request, :pushed
 
-      def self.skip_before_filter(*args); end
-      def self.before_filter(*args); end
+      def self.skip_before_action(*args); end
+      def self.before_action(*args); end
       def head(*args); end
       ###
 
@@ -54,7 +54,7 @@ module GithubWebhook
         controller.request.headers['X-Hub-Signature'] = "sha1=52b582138706ac0c597c315cfc1a1bf177408a4d"
         controller.request.headers['X-GitHub-Event'] = 'push'
         controller.request.headers['Content-Type'] = 'application/json'
-        controller.send :authenticate_github_request!  # Manually as we don't have the before_filter logic in our Mock object
+        controller.send :authenticate_github_request!  # Manually as we don't have the before_action logic in our Mock object
         controller.create
         expect(controller.pushed).to eq "bar"
       end
@@ -65,7 +65,7 @@ module GithubWebhook
         controller.request.headers['X-Hub-Signature'] = "sha1=6986874ecdf710b04de7ef5a040161d41687407a"
         controller.request.headers['X-GitHub-Event'] = 'push'
         controller.request.headers['Content-Type'] = 'application/x-www-form-urlencoded'
-        controller.send :authenticate_github_request!  # Manually as we don't have the before_filter logic in our Mock object
+        controller.send :authenticate_github_request!  # Manually as we don't have the before_action logic in our Mock object
         controller.create
         expect(controller.pushed).to eq "bar"
       end
