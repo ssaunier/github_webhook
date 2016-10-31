@@ -13,7 +13,7 @@ to a [GitHub webhook](https://developer.github.com/webhooks/)
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'github_webhook', '~> 1.0'
+gem 'github_webhook', '~> 1.0.1'
 ```
 
 And then execute:
