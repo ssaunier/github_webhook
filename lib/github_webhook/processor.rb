@@ -11,7 +11,16 @@ module GithubWebhook::Processor
   class UnsupportedGithubEventError < StandardError; end
   class UnsupportedContentTypeError < StandardError; end
 
-  GITHUB_EVENTS_WHITELIST = %w(ping commit_comment create delete deployment deployment_status download follow fork fork_apply gist gollum issue_comment issues member membership page_build public pull_request pull_request_review pull_request_review_comment push release repository status team_add watch)
+  # To fetch list from https://developer.github.com/v3/activity/events/types
+  # run this little JS code in the console:
+  #   var events = "ping";
+  #   $('h3').each(function(i, item) {
+  #     if ($(item).text().match(/webhook event name/i)) {
+  #       events = events + ' ' + $(item).next('p').find('code').html();
+  #     }
+  #   });
+  #   console.log(events);
+  GITHUB_EVENTS_WHITELIST = %w(ping commit_comment create delete deployment deployment_status download follow fork fork_apply gist gollum issue_comment issues label member membership milestone page_build public pull_request pull_request_review pull_request_review_comment push release repository status team_add watch)
 
   def create
     if self.respond_to? event_method

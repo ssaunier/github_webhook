@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    github_webhook (1.0.1)
+    github_webhook (1.0.2)
       activesupport (>= 4)
       rack (>= 1.3)
 
