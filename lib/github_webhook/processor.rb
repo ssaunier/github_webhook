@@ -20,7 +20,7 @@ module GithubWebhook::Processor
   #     }
   #   });
   #   console.log(events);
-  GITHUB_EVENTS_WHITELIST = %w(ping commit_comment create delete deployment deployment_status download follow fork fork_apply gist gollum issue_comment issues label member membership milestone organization org_block page_build project_card project_column project public pull_request pull_request_review pull_request_review_comment push release repository status team team_add watch)
+  GITHUB_EVENTS_WHITELIST = %w(ping commit_comment create delete deployment deployment_status download follow fork fork_apply gist gollum issue_comment issues label member membership milestone organization org_block page_build project_card project_column project public pull_request pull_request_review pull_request_review_comment push release repository status team team_add watch integration_installation integration_installation_repositories)
 
   def create
     if self.respond_to? event_method
