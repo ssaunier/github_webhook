@@ -32,11 +32,12 @@ module GithubWebhook::Processor
     fork_apply
     gist
     gollum
-    integration_installation
-    integration_installation_repositories
+    installation
+    installation_repositories
     issues
     issue_comment
     label
+    marketplace_purchase
     member
     membership
     milestone
