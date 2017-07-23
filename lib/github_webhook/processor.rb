@@ -34,6 +34,8 @@ module GithubWebhook::Processor
     gollum
     installation
     installation_repositories
+    integration_installation
+    integration_installation_repositories
     issues
     issue_comment
     label
