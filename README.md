@@ -13,7 +13,7 @@ to a [GitHub webhook](https://developer.github.com/webhooks/)
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'github_webhook', '~> 0.3.2'
+gem 'github_webhook', '~> 1.0.5'
 ```
 
 And then execute:
@@ -79,7 +79,7 @@ callback_url = "yourdomain.com/github_webhooks"
 webhook_secret = "a_gr34t_s3cr3t"  # Must be set after that in ENV['GITHUB_WEBHOOK_SECRET']
 
 # Create the WebHook
-client.subscribe "https://github.com/#{repo}/events/push.json", callback_url, secret
+client.subscribe "https://github.com/#{repo}/events/push.json", callback_url, webhook_secret
 ```
 
 The secret is set at the webhook creation. Store it in an environment variable,

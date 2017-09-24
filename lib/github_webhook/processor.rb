@@ -2,15 +2,66 @@ module GithubWebhook::Processor
   extend ActiveSupport::Concern
 
   included do
-    before_filter :authenticate_github_request!, only: :create
-    before_filter :check_github_event!, only: :create
+    before_action :authenticate_github_request!, only: :create
+    before_action :check_github_event!, only: :create
   end
 
   class SignatureError < StandardError; end
   class UnspecifiedWebhookSecretError < StandardError; end
   class UnsupportedGithubEventError < StandardError; end
+  class UnsupportedContentTypeError < StandardError; end
 
-  GITHUB_EVENTS_WHITELIST = %w(ping commit_comment create delete deployment deployment_status download follow fork fork_apply gist gollum issue_comment issues member membership page_build public pull_request pull_request_review_comment push release repository status team_add watch)
+  # To fetch list from https://developer.github.com/v3/activity/events/types
+  # run this little JS code in the console:
+  #   var events = "ping";
+  #   $('h3').each(function(i, item) {
+  #     if ($(item).text().match(/webhook event name/i)) {
+  #       events = events + ' ' + $(item).next('p').find('code').html();
+  #     }
+  #   });
+  #   console.log(events);
+  GITHUB_EVENTS_WHITELIST = %w(
+    commit_comment
+    create
+    delete
+    deployment
+    deployment_status
+    download
+    follow
+    fork
+    fork_apply
+    gist
+    gollum
+    installation
+    installation_repositories
+    integration_installation
+    integration_installation_repositories
+    issues
+    issue_comment
+    label
+    marketplace_purchase
+    member
+    membership
+    milestone
+    organization
+    org_block
+    page_build
+    ping
+    project
+    project_card
+    project_column
+    public
+    pull_request
+    pull_request_review
+    pull_request_review_comment
+    push
+    release
+    repository
+    status
+    team
+    team_add
+    watch
+  )
 
   def create
     if self.respond_to? event_method
@@ -54,7 +105,20 @@ module GithubWebhook::Processor
   end
 
   def json_body
-    @json_body ||= ActiveSupport::HashWithIndifferentAccess.new(JSON.load(request_body))
+    @json_body ||= (
+      content_type = request.headers['Content-Type']
+      case content_type
+      when 'application/x-www-form-urlencoded'
+        require 'rack'
+        payload = Rack::Utils.parse_query(request_body)['payload']
+      when 'application/json'
+        payload = request_body
+      else
+        raise UnsupportedContentTypeError.new(
+          "Content-Type #{content_type} is not supported. Use 'application/x-www-form-urlencoded' or 'application.json")
+      end
+      ActiveSupport::HashWithIndifferentAccess.new(JSON.load(payload))
+    )
   end
 
   def signature_header
