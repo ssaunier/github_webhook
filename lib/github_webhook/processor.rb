@@ -73,8 +73,8 @@ module GithubWebhook::Processor
   end
 
   def github_ping(payload)
-    Rails.logger.info "[GithubWebhook::Processor] Hook ping received, hook_id: "\
-      "#{payload[:hook_id]}, #{payload[:zen]}"
+    GithubWebhook.logger && GithubWebhook.logger.info("[GithubWebhook::Processor] Hook ping "\
+      "received, hook_id: #{payload[:hook_id]}, #{payload[:zen]}")
   end
 
   private
@@ -87,7 +87,9 @@ module GithubWebhook::Processor
 
     expected_signature = "sha1=#{OpenSSL::HMAC.hexdigest(HMAC_DIGEST, secret, request_body)}"
     if signature_header != expected_signature
-      raise SignatureError.new "Actual: #{signature_header}, Expected: #{expected_signature}"
+      GithubWebhook.logger && GithubWebhook.logger.warn("[GithubWebhook::Processor] signature "\
+        "invalid, actual: #{signature_header}, expected: #{expected_signature}")
+      raise SignatureError
     end
   end
 
