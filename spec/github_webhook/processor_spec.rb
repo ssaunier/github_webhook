@@ -28,25 +28,49 @@ module GithubWebhook
       end
     end
 
+    class ControllerWithPrivateSecret < ControllerWithoutSecret
+      private
+      def webhook_secret(payload)
+        "secret"
+      end
+    end
+
     class Controller < ControllerWithoutSecret
       def webhook_secret(payload)
         "secret"
       end
     end
 
+    let(:controller_class) { Controller }
+
     let(:controller) do
-      controller = Controller.new
+      controller = controller_class.new
       controller.request = Request.new
       controller
     end
 
-    let(:controller_without_secret) do
-      ControllerWithoutSecret.new
-    end
-
     describe "#create" do
-      it "raises an error when secret is not defined" do
-        expect { controller_without_secret.send :authenticate_github_request! }.to raise_error(Processor::UnspecifiedWebhookSecretError)
+      context 'when #webhook_secret is not defined' do
+        let(:controller_class) { ControllerWithoutSecret }
+
+        it "raises a Processor::UnspecifiedWebhookSecretError" do
+          expect { controller.send :authenticate_github_request! }
+            .to raise_error(Processor::UnspecifiedWebhookSecretError)
+        end
+      end
+
+      context 'when #webhook_secret is private' do
+        let(:controller_class) { ControllerWithPrivateSecret }
+
+        it "calls the #push method in controller" do
+          expect(controller).to receive(:github_push)
+          controller.request.body = StringIO.new({ :foo => "bar" }.to_json.to_s)
+          controller.request.headers['X-Hub-Signature'] = "sha1=52b582138706ac0c597c315cfc1a1bf177408a4d"
+          controller.request.headers['X-GitHub-Event'] = 'push'
+          controller.request.headers['Content-Type'] = 'application/json'
+          controller.send :authenticate_github_request!  # Manually as we don't have the before_filter logic in our Mock object
+          controller.create
+        end
       end
 
       it "calls the #push method in controller (json)" do
