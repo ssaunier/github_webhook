@@ -2,3 +2,4 @@
 *.gem
 coverage
 /Gemfile.lock
+/gemfiles/*.gemfile.lock

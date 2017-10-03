@@ -93,3 +93,17 @@ You can have an overview of your webhooks at the following URL:
 ```
 https://github.com/:username/:repo/settings/hooks
 ```
+
+## Contributing
+
+### Specs
+
+This project uses [Appraisal](https://github.com/thoughtbot/appraisal) to test against multiple
+versions of Rails.
+
+On Travis, builds are also run on multiple versions of Ruby, each with multiple versions of Rails.
+
+When you run `bundle install`, it will use the latest version of Rails.
+You can then run `bundle exec rake spec` to run the test with that version of Rails.
+
+To run the specs against each version of Rails, use `bundle exec appraisal rake spec`.

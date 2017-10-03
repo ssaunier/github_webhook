@@ -2,6 +2,11 @@ language: ruby
 rvm:
   - 2.4.2
   - 2.3.5
+  - 2.2.8
+gemfile:
+  - gemfiles/rails_4.2.gemfile
+  - gemfiles/rails_5.0.gemfile
+  - gemfiles/rails_5.1.gemfile
 addons:
   code_climate:
     repo_token: 50425d682162d68af0b65bd9e5160da8337d2159fc3ebc00d2a5b14386548ac5
