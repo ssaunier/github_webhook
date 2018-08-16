@@ -117,7 +117,7 @@ module GithubWebhook::Processor
         payload = request_body
       else
         raise UnsupportedContentTypeError.new(
-          "Content-Type #{content_type} is not supported. Use 'application/x-www-form-urlencoded' or 'application.json")
+          "Content-Type #{content_type} is not supported. Use 'application/x-www-form-urlencoded' or 'application/json")
       end
       ActiveSupport::HashWithIndifferentAccess.new(JSON.load(payload))
     )
