@@ -20,7 +20,7 @@ module GithubWebhook::Processor
   #     }
   #   });
   #   console.log(events);
-  GITHUB_EVENTS_WHITELIST = %w(
+  GITHUB_EVENTS = %w(
     commit_comment
     create
     delete
@@ -94,7 +94,7 @@ module GithubWebhook::Processor
   end
 
   def check_github_event!
-    unless GITHUB_EVENTS_WHITELIST.include?(request.headers['X-GitHub-Event'])
+    unless GITHUB_EVENTS.include?(request.headers['X-GitHub-Event'])
       raise UnsupportedGithubEventError.new("#{request.headers['X-GitHub-Event']} is not a whiltelisted GitHub event. See https://developer.github.com/v3/activity/events/types/")
     end
   end
