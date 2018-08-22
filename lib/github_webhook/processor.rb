@@ -13,14 +13,10 @@ module GithubWebhook::Processor
 
   # To fetch list from https://developer.github.com/v3/activity/events/types
   # run this little JS code in the console:
-  #   var events = "ping";
-  #   $('h3').each(function(i, item) {
-  #     if ($(item).text().match(/webhook event name/i)) {
-  #       events = events + ' ' + $(item).next('p').find('code').html();
-  #     }
-  #   });
-  #   console.log(events);
+  #    $("h3:contains('Webhook event name')").next('p').each((_, p) => console.log(p.innerText))
   GITHUB_EVENTS = %w(
+    check_run
+    check_suite
     commit_comment
     create
     delete
@@ -30,16 +26,14 @@ module GithubWebhook::Processor
     follow
     fork
     fork_apply
+    github_app_authorization
     gist
     gollum
     installation
     installation_repositories
-    integration_installation
-    integration_installation_repositories
-    issues
     issue_comment
+    issues
     label
-    marketplace_purchase
     member
     membership
     milestone
@@ -47,9 +41,9 @@ module GithubWebhook::Processor
     org_block
     page_build
     ping
-    project
     project_card
     project_column
+    project
     public
     pull_request
     pull_request_review
@@ -57,6 +51,8 @@ module GithubWebhook::Processor
     push
     release
     repository
+    repository_import
+    repository_vulnerability_alert
     status
     team
     team_add
