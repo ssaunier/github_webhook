@@ -91,7 +91,7 @@ module GithubWebhook::Processor
 
   def check_github_event!
     unless GITHUB_EVENTS.include?(request.headers['X-GitHub-Event'])
-      raise UnsupportedGithubEventError.new("#{request.headers['X-GitHub-Event']} is not a whiltelisted GitHub event. See https://developer.github.com/v3/activity/events/types/")
+      raise UnsupportedGithubEventError.new("#{request.headers['X-GitHub-Event']} is not a whitelisted GitHub event. See https://developer.github.com/v3/activity/events/types/")
     end
   end
 
