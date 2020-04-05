@@ -82,7 +82,7 @@ module GithubWebhook::Processor
     secret = webhook_secret(json_body)
 
     expected_signature = "sha1=#{OpenSSL::HMAC.hexdigest(HMAC_DIGEST, secret, request_body)}"
-    if signature_header != expected_signature
+    unless ActiveSupport::SecurityUtils.secure_compare(signature_header, expected_signature)
       GithubWebhook.logger && GithubWebhook.logger.warn("[GithubWebhook::Processor] signature "\
         "invalid, actual: #{signature_header}, expected: #{expected_signature}")
       raise SignatureError
