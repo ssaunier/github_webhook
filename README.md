@@ -1,4 +1,3 @@
-[![Code Climate](https://codeclimate.com/github/ssaunier/github_webhook/badges/gpa.svg)](https://codeclimate.com/github/ssaunier/github_webhook)
 [![Gem Version](https://badge.fury.io/rb/github_webhook.svg)](http://badge.fury.io/rb/github_webhook)
 
 

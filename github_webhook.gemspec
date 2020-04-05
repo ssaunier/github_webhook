@@ -23,7 +23,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency "railties", ">= 4"
 
   spec.add_development_dependency "rake", "~> 12.3"
-  spec.add_development_dependency "rspec", "~> 2.14"
-  spec.add_development_dependency "codeclimate-test-reporter", "~> 1.0"
+  spec.add_development_dependency "rspec", "~> 3.9"
   spec.add_development_dependency "appraisal"
 end
