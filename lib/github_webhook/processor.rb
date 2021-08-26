@@ -13,32 +13,36 @@ module GithubWebhook::Processor
 
   # To fetch list from https://developer.github.com/v3/activity/events/types
   # run this little JS code in the console:
-  #    $("h3:contains('Webhook event name')").next('p').each((_, p) => console.log(p.innerText))
+  #    document.querySelectorAll('.list-style-none li.lh-condensed a').forEach(e => console.log(e.text))
   GITHUB_EVENTS = %w(
     check_run
     check_suite
+    code_scanning_alert
     commit_comment
+    content_reference
     create
     delete
+    deploy_key
     deployment
     deployment_status
-    download
-    follow
+    discussion
+    discussion_comment
     fork
-    fork_apply
     github_app_authorization
-    gist
     gollum
     installation
     installation_repositories
     issue_comment
     issues
     label
+    marketplace_purchase
     member
     membership
+    meta
     milestone
     organization
     org_block
+    package
     page_build
     ping
     project_card
@@ -50,13 +54,20 @@ module GithubWebhook::Processor
     pull_request_review_comment
     push
     release
+    repository_dispatch
     repository
     repository_import
     repository_vulnerability_alert
+    secret_scanning_alert
+    security_advisory
+    sponsorship
+    star
     status
     team
     team_add
     watch
+    workflow_dispatch
+    workflow_run
   )
 
   def create
