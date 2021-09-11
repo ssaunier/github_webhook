@@ -1,10 +1,20 @@
+
 [![Gem Version](https://badge.fury.io/rb/github_webhook.svg)](http://badge.fury.io/rb/github_webhook)
 
 
-# GithubWebhook
+# Github Webhook for Rails
 
 This gem will help you to quickly setup a route in your Rails application which listens
 to a [GitHub webhook](https://developer.github.com/webhooks/)
+
+## Alternatives
+
+If you want to use this logic outside of Rails, you should consider the following gems (cf [#19](https://github.com/ssaunier/github_webhook/issues/19)):
+
+- [`sinatra-github_webhooks`](https://github.com/chrismytton/sinatra-github_webhooks)
+- [`rack-github_webhooks`](https://github.com/chrismytton/rack-github_webhooks)
+
+If you are on Rails, please read on!
 
 ## Installation
 
