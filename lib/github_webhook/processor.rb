@@ -131,7 +131,7 @@ module GithubWebhook::Processor
   end
 
   def signature_header
-    @signature_header ||= request.headers['X-Hub-Signature']
+    @signature_header ||= request.headers['X-Hub-Signature'] || ''
   end
 
   def event_method
