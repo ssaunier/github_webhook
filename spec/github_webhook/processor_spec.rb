@@ -121,6 +121,13 @@ module GithubWebhook
         controller.request.headers['Content-Type'] = 'application/xml'
         expect { controller.send :authenticate_github_request! }.to raise_error(Processor::UnsupportedContentTypeError)
       end
+
+      it 'raises SignatureError when the X-Hub-Signature header is missing' do
+        controller.request.body = StringIO.new('{}')
+        controller.request.headers['Content-Type'] = 'application/json'
+        controller.request.headers['X-GitHub-Event'] = 'ping'
+        expect { controller.send :authenticate_github_request! }.to raise_error(Processor::SignatureError)
+      end
     end
   end
 end
