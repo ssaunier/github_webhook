@@ -86,13 +86,13 @@ module GithubWebhook::Processor
 
   private
 
-  HMAC_DIGEST = OpenSSL::Digest.new('sha1')
+  HMAC_DIGEST = OpenSSL::Digest.new('sha256')
 
   def authenticate_github_request!
     raise UnspecifiedWebhookSecretError.new unless respond_to?(:webhook_secret, true)
     secret = webhook_secret(json_body)
 
-    expected_signature = "sha1=#{OpenSSL::HMAC.hexdigest(HMAC_DIGEST, secret, request_body)}"
+    expected_signature = "sha256=#{OpenSSL::HMAC.hexdigest(HMAC_DIGEST, secret, request_body)}"
     unless ActiveSupport::SecurityUtils.secure_compare(signature_header, expected_signature)
       GithubWebhook.logger && GithubWebhook.logger.warn("[GithubWebhook::Processor] signature "\
         "invalid, actual: #{signature_header}, expected: #{expected_signature}")
@@ -131,7 +131,7 @@ module GithubWebhook::Processor
   end
 
   def signature_header
-    @signature_header ||= request.headers['X-Hub-Signature'] || ''
+    @signature_header ||= request.headers['X-Hub-Signature-256'] || ''
   end
 
   def event_method
