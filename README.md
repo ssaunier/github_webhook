@@ -21,7 +21,7 @@ If you are on Rails, please read on!
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'github_webhook', '~> 1.2'
+gem 'github_webhook', '~> 1.3'
 ```
 
 And then execute:
