@@ -65,7 +65,7 @@ module GithubWebhook
         it "calls the #push method in controller" do
           expect(controller).to receive(:github_push)
           controller.request.body = StringIO.new({ :foo => "bar" }.to_json.to_s)
-          controller.request.headers['X-Hub-Signature'] = "sha1=52b582138706ac0c597c315cfc1a1bf177408a4d"
+          controller.request.headers['X-Hub-Signature-256'] = "sha256=3f3ab3986b656abb17af3eb1443ed6c08ef8fff9fea83915909d1b421aec89be"
           controller.request.headers['X-GitHub-Event'] = 'push'
           controller.request.headers['Content-Type'] = 'application/json'
           controller.send :authenticate_github_request!  # Manually as we don't have the before_filter logic in our Mock object
@@ -75,7 +75,7 @@ module GithubWebhook
 
       it "calls the #push method in controller (json)" do
         controller.request.body = StringIO.new({ :foo => "bar" }.to_json.to_s)
-        controller.request.headers['X-Hub-Signature'] = "sha1=52b582138706ac0c597c315cfc1a1bf177408a4d"
+        controller.request.headers['X-Hub-Signature-256'] = "sha256=3f3ab3986b656abb17af3eb1443ed6c08ef8fff9fea83915909d1b421aec89be"
         controller.request.headers['X-GitHub-Event'] = 'push'
         controller.request.headers['Content-Type'] = 'application/json'
         controller.send :authenticate_github_request!  # Manually as we don't have the before_action logic in our Mock object
@@ -86,7 +86,7 @@ module GithubWebhook
       it "calls the #push method (x-www-form-urlencoded encoded)" do
         body = "payload=" + CGI::escape({ :foo => "bar" }.to_json.to_s)
         controller.request.body = StringIO.new(body)
-        controller.request.headers['X-Hub-Signature'] = "sha1=6986874ecdf710b04de7ef5a040161d41687407a"
+        controller.request.headers['X-Hub-Signature-256'] = "sha256=cefe60b775fcb22483ceece8f20be4869868a20fb4aa79829e53c1de61b99d01"
         controller.request.headers['X-GitHub-Event'] = 'push'
         controller.request.headers['Content-Type'] = 'application/x-www-form-urlencoded'
         controller.send :authenticate_github_request!  # Manually as we don't have the before_action logic in our Mock object
@@ -96,7 +96,7 @@ module GithubWebhook
 
       it "raises an error when signature does not match" do
         controller.request.body = StringIO.new({ :foo => "bar" }.to_json.to_s)
-        controller.request.headers['X-Hub-Signature'] = "sha1=FOOBAR"
+        controller.request.headers['X-Hub-Signature-256'] = "sha256=FOOBAR"
         controller.request.headers['X-GitHub-Event'] = 'push'
         controller.request.headers['Content-Type'] = 'application/json'
         expect { controller.send :authenticate_github_request! }.to raise_error(Processor::SignatureError)
@@ -116,7 +116,7 @@ module GithubWebhook
 
       it "raises an error when the content type is not correct" do
         controller.request.body = StringIO.new({ :foo => "bar" }.to_json.to_s)
-        controller.request.headers['X-Hub-Signature'] = "sha1=52b582138706ac0c597c315cfc1a1bf177408a4d"
+        controller.request.headers['X-Hub-Signature-256'] = "sha256=3f3ab3986b656abb17af3eb1443ed6c08ef8fff9fea83915909d1b421aec89be"
         controller.request.headers['X-GitHub-Event'] = 'ping'
         controller.request.headers['Content-Type'] = 'application/xml'
         expect { controller.send :authenticate_github_request! }.to raise_error(Processor::UnsupportedContentTypeError)
