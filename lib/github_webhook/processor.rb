@@ -1,15 +1,11 @@
 module GithubWebhook::Processor
   extend ActiveSupport::Concern
+  require 'abstract_controller'
 
   included do
     before_action :authenticate_github_request!, only: :create
     before_action :check_github_event!, only: :create
   end
-
-  class SignatureError < StandardError; end
-  class UnspecifiedWebhookSecretError < StandardError; end
-  class UnsupportedGithubEventError < StandardError; end
-  class UnsupportedContentTypeError < StandardError; end
 
   # To fetch list from https://developer.github.com/v3/activity/events/types
   # run this little JS code in the console:
@@ -75,7 +71,7 @@ module GithubWebhook::Processor
       self.send event_method, json_body
       head(:ok)
     else
-      raise NoMethodError.new("GithubWebhooksController##{event_method} not implemented")
+      raise AbstractController::ActionNotFound.new("GithubWebhooksController##{event_method} not implemented")
     end
   end
 
@@ -89,20 +85,20 @@ module GithubWebhook::Processor
   HMAC_DIGEST = OpenSSL::Digest.new('sha256')
 
   def authenticate_github_request!
-    raise UnspecifiedWebhookSecretError.new unless respond_to?(:webhook_secret, true)
+    raise AbstractController::ActionNotFound.new unless respond_to?(:webhook_secret, true)
     secret = webhook_secret(json_body)
 
     expected_signature = "sha256=#{OpenSSL::HMAC.hexdigest(HMAC_DIGEST, secret, request_body)}"
     unless ActiveSupport::SecurityUtils.secure_compare(signature_header, expected_signature)
       GithubWebhook.logger && GithubWebhook.logger.warn("[GithubWebhook::Processor] signature "\
         "invalid, actual: #{signature_header}, expected: #{expected_signature}")
-      raise SignatureError
+      raise AbstractController::ActionNotFound
     end
   end
 
   def check_github_event!
     unless GITHUB_EVENTS.include?(request.headers['X-GitHub-Event'])
-      raise UnsupportedGithubEventError.new("#{request.headers['X-GitHub-Event']} is not a whitelisted GitHub event. See https://developer.github.com/v3/activity/events/types/")
+      raise AbstractController::ActionNotFound.new("#{request.headers['X-GitHub-Event']} is not a whitelisted GitHub event. See https://developer.github.com/v3/activity/events/types/")
     end
   end
 
@@ -123,7 +119,7 @@ module GithubWebhook::Processor
       when 'application/json'
         payload = request_body
       else
-        raise UnsupportedContentTypeError.new(
+        raise AbstractController::ActionNotFound.new(
           "Content-Type #{content_type} is not supported. Use 'application/x-www-form-urlencoded' or 'application/json")
       end
       ActiveSupport::HashWithIndifferentAccess.new(JSON.load(payload))

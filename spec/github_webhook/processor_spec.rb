@@ -53,9 +53,9 @@ module GithubWebhook
       context 'when #webhook_secret is not defined' do
         let(:controller_class) { ControllerWithoutSecret }
 
-        it "raises a Processor::UnspecifiedWebhookSecretError" do
+        it "raises a AbstractController::ActionNotFound" do
           expect { controller.send :authenticate_github_request! }
-            .to raise_error(Processor::UnspecifiedWebhookSecretError)
+            .to raise_error(AbstractController::ActionNotFound)
         end
       end
 
@@ -99,19 +99,25 @@ module GithubWebhook
         controller.request.headers['X-Hub-Signature-256'] = "sha256=FOOBAR"
         controller.request.headers['X-GitHub-Event'] = 'push'
         controller.request.headers['Content-Type'] = 'application/json'
-        expect { controller.send :authenticate_github_request! }.to raise_error(Processor::SignatureError)
+        expect { controller.send :authenticate_github_request! }.to raise_error(AbstractController::ActionNotFound)
       end
 
       it "raises an error when the github event method is not implemented" do
         controller.request.headers['X-GitHub-Event'] = 'deployment'
         controller.request.headers['Content-Type'] = 'application/json'
-        expect { controller.create }.to raise_error(NoMethodError)
+        expect { controller.create }.to raise_error(
+          AbstractController::ActionNotFound,
+          "GithubWebhooksController#github_deployment not implemented",
+        )
       end
 
       it "raises an error when the github event is not in the whitelist" do
         controller.request.headers['X-GitHub-Event'] = 'fake_event'
         controller.request.headers['Content-Type'] = 'application/json'
-        expect { controller.send :check_github_event! }.to raise_error(Processor::UnsupportedGithubEventError)
+        expect { controller.send :check_github_event! }.to raise_error(
+          AbstractController::ActionNotFound,
+          "fake_event is not a whitelisted GitHub event. See https://developer.github.com/v3/activity/events/types/",
+        )
       end
 
       it "raises an error when the content type is not correct" do
@@ -119,14 +125,17 @@ module GithubWebhook
         controller.request.headers['X-Hub-Signature-256'] = "sha256=3f3ab3986b656abb17af3eb1443ed6c08ef8fff9fea83915909d1b421aec89be"
         controller.request.headers['X-GitHub-Event'] = 'ping'
         controller.request.headers['Content-Type'] = 'application/xml'
-        expect { controller.send :authenticate_github_request! }.to raise_error(Processor::UnsupportedContentTypeError)
+        expect { controller.send :authenticate_github_request! }.to raise_error(
+          AbstractController::ActionNotFound,
+          "Content-Type application/xml is not supported. Use 'application/x-www-form-urlencoded' or 'application/json",
+        )
       end
 
       it 'raises SignatureError when the X-Hub-Signature header is missing' do
         controller.request.body = StringIO.new('{}')
         controller.request.headers['Content-Type'] = 'application/json'
         controller.request.headers['X-GitHub-Event'] = 'ping'
-        expect { controller.send :authenticate_github_request! }.to raise_error(Processor::SignatureError)
+        expect { controller.send :authenticate_github_request! }.to raise_error(AbstractController::ActionNotFound)
       end
     end
   end
