@@ -41,7 +41,7 @@ Then create a new controller:
 
 ```ruby
 # app/controllers/github_webhooks_controller.rb
-class GithubWebhooksController < ActionController::Base
+class GithubWebhooksController < ActionController::API
   include GithubWebhook::Processor
 
   # Handle push event
