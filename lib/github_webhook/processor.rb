@@ -11,13 +11,14 @@ module GithubWebhook::Processor
   # run this little JS code in the console:
   #    document.querySelectorAll('.list-style-none li.lh-condensed a').forEach(e => console.log(e.text))
   GITHUB_EVENTS = %w(
+    branch_protection_rule
     check_run
     check_suite
     code_scanning_alert
     commit_comment
-    content_reference
     create
     delete
+    dependabot_alert
     deploy_key
     deployment
     deployment_status
@@ -28,42 +29,50 @@ module GithubWebhook::Processor
     gollum
     installation
     installation_repositories
+    installation_target
     issue_comment
     issues
     label
     marketplace_purchase
     member
     membership
+    merge_group
     meta
     milestone
-    organization
     org_block
+    organization
     package
     page_build
     ping
     project_card
-    project_column
     project
+    project_column
+    projects_v2
+    projects_v2_item
     public
     pull_request
-    pull_request_review
     pull_request_review_comment
+    pull_request_review
     pull_request_review_thread
     push
+    registry_package
     release
-    repository_dispatch
     repository
+    repository_dispatch
     repository_import
     repository_vulnerability_alert
     secret_scanning_alert
+    secret_scanning_alert_location
     security_advisory
+    security_and_analysis
     sponsorship
     star
     status
-    team
     team_add
+    team
     watch
     workflow_dispatch
+    workflow_job
     workflow_run
   )
 
